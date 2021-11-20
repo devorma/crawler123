@@ -77,15 +77,25 @@ WSGI_APPLICATION = 'crawler.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'crawler',
-        'USER':'root',
-        'PASSWORD':'123456',
-        'PORT':'3306',
-        'HOST':'127.0.0.1'
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':'d7rulk1adt5m93',
+        'USER':'cvjuhygzjosylu',
+        'PASSWORD':'e6ff87262b7973b4688a9eb804ba3d8fccd4737d8b8078253f15d86eceff8520',
+        'PORT':'5432',
+        'HOST':'ec2-34-198-189-252.compute-1.amazonaws.com'
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME':'crawler',
+#         'USER':'root',
+#         'PASSWORD':'123456',
+#         'PORT':'3306',
+#         'HOST':'127.0.0.1'
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
