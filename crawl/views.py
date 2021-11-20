@@ -71,7 +71,7 @@ def initiate(request):
 def crawl(request):
     for site in l2:
         urlStr = 'site:' + site + '%20' + 'filetype:pdf' #search string for google search
-        for j in search(urlStr, num_results=4):
+        for j in search(urlStr, num_results=2):
             print(j)
             all_links.append(j) #appending all the pdf url to list
         for u in all_links:
