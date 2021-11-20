@@ -43,7 +43,7 @@ import glob
 
 
 # output_dir = os.chdir(r"C:\scraping output")
-output_dir = os.chdir(r"C:\Users\amanm\PycharmProjects\My_Web_Crwaler\crawler\crawler")
+#output_dir = os.chdir(r"C:\Users\amanm\PycharmProjects\My_Web_Crwaler\crawler\crawler")
 MBFACTOR = float(1 << 20) #for converting byted to Megabytes
 
 
