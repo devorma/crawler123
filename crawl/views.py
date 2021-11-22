@@ -40,8 +40,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import glob
 
-import  requests, os 
-
 
 # output_dir = os.chdir(r"C:\scraping output")
 #output_dir = os.chdir(r"C:\Users\amanm\PycharmProjects\My_Web_Crwaler\crawler\crawler")
@@ -74,15 +72,12 @@ def crawl(request):
         for site in l2:
             urlStr = 'site:' + site + '%20' + 'filetype:pdf' #search string for google search
             for j in search(urlStr, num_results=1):
-                #print(j)
                 all_links.append(j) #appending all the pdf url to list
             for u in all_links:
                 response = requests.get(u) #fetching each the url from the list
                 if response.status_code == 200: #checking if the url is responsive and available
                     a = urlparse(u)
-                    #print('The path name is:\n',a.path) #parsing the path of the url
                     fl=os.path.basename(a.path) #parsing the filename from the url
-                    #print('The extracted Filename is:\n',fl)
                     file_size=response.headers.get('content-length', 0)
                     content_type=response.headers.get('Content-Type', 0)
                     last_modified=response.headers.get('Last-Modified', 0)
