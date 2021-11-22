@@ -102,9 +102,7 @@ def crawl(request):
 
 
 def email_pdf(request):
-    my_path = os.getcwd()
     subject = "An email with attachment from Python"
-    body = "These are the links that are shared for your convinience."
     sender_email = 'aman.mishra1496@gmail.com'
     receiver_email = 'aman777444@gmail.com'
     password = 'amanelvisbella'
