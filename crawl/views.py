@@ -41,8 +41,7 @@ from email.mime.text import MIMEText
 import glob
 
 
-# output_dir = os.chdir(r"C:\scraping output")
-#output_dir = os.chdir(r"C:\Users\amanm\PycharmProjects\My_Web_Crwaler\crawler\crawler")
+
 MBFACTOR = float(1 << 20) #for converting byted to Megabytes
 
 
@@ -53,9 +52,6 @@ except ImportError:
 
 
 #list of websites to crawl
-# l2 = ['portalebandi.regione.basilicata.it', 'http://www.unioncamerelombardia.it', 'http://www.sistema.puglia.it',
-#       'http://moliseineuropa.regione.molise.it']
-
 l2 = ['portalebandi.regione.basilicata.it', 'http://www.unioncamerelombardia.it','http://www.sistema.puglia.it','http://moliseineuropa.regione.molise.it']
 all_links = []
 
@@ -168,6 +164,13 @@ def crawl(request):
 
 
 def email_pdf(request):
+
+        extracted_links=[]#empty list to store all the extracted links from the database
+
+        for link in Publisher.objects.values_list('links'):
+                print('The links are:\n',link)
+                extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
+
         url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
         conn = http.client.HTTPSConnection("be.trustifi.com")
         payload = json.dumps({
@@ -175,6 +178,7 @@ def email_pdf(request):
             {
             "email": "aman777444@gmail.com",
             "name": "Aman Mishra",
+            "body":''.join(extracted_links)
             }
         ],
         })
