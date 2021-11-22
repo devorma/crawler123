@@ -56,7 +56,7 @@ except ImportError:
 # l2 = ['portalebandi.regione.basilicata.it', 'http://www.unioncamerelombardia.it', 'http://www.sistema.puglia.it',
 #       'http://moliseineuropa.regione.molise.it']
 
-l2 = ['portalebandi.regione.basilicata.it', 'http://www.unioncamerelombardia.it','http://www.sistema.puglia.it']
+l2 = ['portalebandi.regione.basilicata.it', 'http://www.unioncamerelombardia.it','http://www.sistema.puglia.it','http://moliseineuropa.regione.molise.it']
 all_links = []
 
 
