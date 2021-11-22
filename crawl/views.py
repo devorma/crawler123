@@ -171,6 +171,7 @@ def crawl(request):
 
 
 def email_pdf(request):
+        url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
         conn = http.client.HTTPSConnection("be.trustifi.com")
         payload = json.dumps({
         "recipients": [
@@ -196,7 +197,7 @@ def email_pdf(request):
         'x-trustifi-secret': os.environ['0f7c288aad8a9542f1c355b60b05e0f0'],
         'Content-Type': 'application/json'
         }
-        conn.request("POST", "/api/i/v1/email", payload, headers)
+        conn.request("POST", url, payload, headers)
         res = conn.getresponse()
         data = res.read()
         print(data.decode("utf-8"))
