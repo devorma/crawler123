@@ -174,6 +174,13 @@ def email_pdf(request):
         url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
         conn = http.client.HTTPSConnection("be.trustifi.com")
         payload = json.dumps({
+              "template": {
+            "name": "my_template",
+            "fields": {
+            "first_field": "hello",
+            "second_field": "world"
+            }
+        },
         "recipients": [
             {
             "email": "aman777444@gmail.com",
@@ -193,8 +200,8 @@ def email_pdf(request):
         }
         })
         headers = {
-        'x-trustifi-key': os.environ['fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49'],
-        'x-trustifi-secret': os.environ['0f7c288aad8a9542f1c355b60b05e0f0'],
+        'x-trustifi-key': 'fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49',
+        'x-trustifi-secret': '0f7c288aad8a9542f1c355b60b05e0f0',
         'Content-Type': 'application/json'
         }
         conn.request("POST", url, payload, headers)
