@@ -75,22 +75,22 @@ def crawl(request):
                 all_links.append(j) #appending all the pdf url to list
             for u in all_links:
                 response = requests.get(u) #fetching each the url from the list
-                if response.status_code == 200: #checking if the url is responsive and available
-                    a = urlparse(u)
-                    fl=os.path.basename(a.path) #parsing the filename from the url
-                    file_size=response.headers.get('content-length', 0)
-                    content_type=response.headers.get('Content-Type', 0)
-                    last_modified=response.headers.get('Last-Modified', 0)
-                    expiry_date=response.headers.get('Expires', 0)
-                    cache_control=response.headers.get('Cache', 0)
-                    server=response.headers.get('Server', 0)
+                #if response.status_code == 200: #checking if the url is responsive and available
+                a = urlparse(u)
+                fl=os.path.basename(a.path) #parsing the filename from the url
+                file_size=response.headers.get('content-length', 0)
+                content_type=response.headers.get('Content-Type', 0)
+                last_modified=response.headers.get('Last-Modified', 0)
+                expiry_date=response.headers.get('Expires', 0)
+                cache_control=response.headers.get('Cache', 0)
+                server=response.headers.get('Server', 0)
 
-                    pub_instance = Publisher.objects.create(name=fl,links=u,file_size=file_size,content_type=content_type,last_modified_y=last_modified,expiry_date_y=expiry_date,cache_control_y=cache_control,server_y=server) #creating the entry in the database
-                    pub_instance.save() #saving the info for each url to database
+                pub_instance = Publisher.objects.create(name=fl,links=u,file_size=file_size,content_type=content_type,last_modified_y=last_modified,expiry_date_y=expiry_date,cache_control_y=cache_control,server_y=server) #creating the entry in the database
+                pub_instance.save() #saving the info for each url to database
 
-                    for row in Publisher.objects.all().reverse(): #removing all the duplicate items from the database
-                        if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
-                            row.delete()
+                for row in Publisher.objects.all().reverse(): #removing all the duplicate items from the database
+                    if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
+                        row.delete()
     except Exception as exc:
         pass
         return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
