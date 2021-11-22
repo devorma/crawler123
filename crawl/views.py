@@ -174,13 +174,6 @@ def email_pdf(request):
         url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
         conn = http.client.HTTPSConnection("be.trustifi.com")
         payload = json.dumps({
-              "template": {
-            "name": "my_template",
-            "fields": {
-            "first_field": "hello",
-            "second_field": "world"
-            }
-        },
         "recipients": [
             {
             "email": "aman777444@gmail.com",
