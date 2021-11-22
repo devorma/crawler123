@@ -192,8 +192,8 @@ def email_pdf(request):
         }
         })
         headers = {
-        'x-trustifi-key': '{{fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49}}',
-        'x-trustifi-secret': '{{0f7c288aad8a9542f1c355b60b05e0f0}}',
+        'x-trustifi-key': os.environ['fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49'],
+        'x-trustifi-secret': os.environ['0f7c288aad8a9542f1c355b60b05e0f0'],
         'Content-Type': 'application/json'
         }
         conn.request("POST", "/api/i/v1/email", payload, headers)
