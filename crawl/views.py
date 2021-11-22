@@ -5,7 +5,8 @@ from datetime import time
 import time
 from django.db.models import Count
 #   
-
+import http.client
+import json
 #importing files from main project
 from bs4 import BeautifulSoup
 import re, requests, hashlib, os
@@ -142,29 +143,61 @@ def crawl(request):
 
 #     return render(request, 'email_result.html')
 
+#2nd part
+        # url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
+        # extracted_links=[]#empty list to store all the extracted links from the database
+        # for link in Publisher.objects.values_list('links'):
+        #         print('The links are:\n',link)
+        #         extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
+
+        # postData ={
+        #     "name": "my_template",
+        #     "title": "Email Template",
+        #     "html": " <body><p>Good Morning,<br>I hope you are well. These are the links which have been generated for your convinience.<br></p><br><ul>"+''.join(extracted_links)+"</ul><br><p>Regards,<br>Aman Mishra</p></body>"}
+
+        # payload = {"{\"recipients\":[{\"email\":\"aman777444@gmail.com\"}]}",postData}
+        # headers = {
+        # 'x-trustifi-key': os.environ['fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49'],
+        # 'x-trustifi-secret': os.environ['0f7c288aad8a9542f1c355b60b05e0f0'],
+        # 'Content-Type': 'application/json'
+        # }
+
+        # response = requests.request('POST', url, headers = headers, data = payload)
+        # print(response.json())
+        # return render(request, 'email_result.html')
+
 
 
 
 
 def email_pdf(request):
-        url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
-        extracted_links=[]#empty list to store all the extracted links from the database
-        for link in Publisher.objects.values_list('links'):
-                print('The links are:\n',link)
-                extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
-
-        postData ={
-            "name": "my_template",
-            "title": "Email Template",
-            "html": " <body><p>Good Morning,<br>I hope you are well. These are the links which have been generated for your convinience.<br></p><br><ul>"+''.join(extracted_links)+"</ul><br><p>Regards,<br>Aman Mishra</p></body>"}
-
-        payload = {"{\"recipients\":[{\"email\":\"aman777444@gmail.com\"}]}",postData}
+        conn = http.client.HTTPSConnection("be.trustifi.com")
+        payload = json.dumps({
+        "recipients": [
+            {
+            "email": "aman777444@gmail.com",
+            "name": "Aman Mishra",
+            }
+        ],
+        "lists": [],
+        "contacts": [],
+        "attachments": [],
+        "title": "Title",
+        "html": "Body",
+        "methods": {
+            "postmark": False,
+            "secureSend": False,
+            "encryptContent": False,
+            "secureReply": False
+        }
+        })
         headers = {
-        'x-trustifi-key': os.environ['fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49'],
-        'x-trustifi-secret': os.environ['0f7c288aad8a9542f1c355b60b05e0f0'],
+        'x-trustifi-key': '{{fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49}}',
+        'x-trustifi-secret': '{{0f7c288aad8a9542f1c355b60b05e0f0}}',
         'Content-Type': 'application/json'
         }
-
-        response = requests.request('POST', url, headers = headers, data = payload)
-        print(response.json())
+        conn.request("POST", "/api/i/v1/email", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
         return render(request, 'email_result.html')
