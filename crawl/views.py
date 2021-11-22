@@ -53,8 +53,10 @@ except ImportError:
 
 
 #list of websites to crawl
-l2 = ['portalebandi.regione.basilicata.it', 'http://www.unioncamerelombardia.it', 'http://www.sistema.puglia.it',
-      'http://moliseineuropa.regione.molise.it']
+# l2 = ['portalebandi.regione.basilicata.it', 'http://www.unioncamerelombardia.it', 'http://www.sistema.puglia.it',
+#       'http://moliseineuropa.regione.molise.it']
+
+l2 = ['portalebandi.regione.basilicata.it', 'http://www.unioncamerelombardia.it']
 all_links = []
 
 
