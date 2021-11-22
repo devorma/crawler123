@@ -39,7 +39,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import glob
 
-
+import  requests, os 
 
 
 # output_dir = os.chdir(r"C:\scraping output")
@@ -101,87 +101,70 @@ def crawl(request):
 
 
 
+# def email_pdf(request):
+#     subject = "An email with attachment from Python"
+#     sender_email = 'aman.mishra1496@gmail.com'
+#     receiver_email = 'aman777444@gmail.com'
+#     password = 'amanelvisbella'
+
+#     # Create a multipart message and set header
+#     message = MIMEMultipart('alternative')
+#     message["From"] = sender_email
+#     message["To"] = receiver_email
+#     message["Subject"] = subject
+#     # message["Bcc"] = receiver_email  # Recommended for mass emails
+
+
+#     extracted_links=[]#empty list to store all the extracted links from the database
+
+#     for link in Publisher.objects.values_list('links'):
+#         print('The links are:\n',link)
+#         extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
+
+
+    # html = """
+    #         <html>
+    #         <body>
+    #             <p>Good Morning,<br>
+    #             I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
+    #             <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
+    #         </body>
+    #         </html>
+    #         """
+
+
+#     message.attach(MIMEText(html, "html"))
+
+#     context = ssl.create_default_context()
+#     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+#         server.login(sender_email, password)
+#         server.sendmail(sender_email, receiver_email,message.as_string()) #text
+
+#     return render(request, 'email_result.html')
+
+
+
+
+
 def email_pdf(request):
-    subject = "An email with attachment from Python"
-    sender_email = 'aman.mishra1496@gmail.com'
-    receiver_email = 'aman777444@gmail.com'
-    password = 'amanelvisbella'
+        url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
+        extracted_links=[]#empty list to store all the extracted links from the database
+        for link in Publisher.objects.values_list('links'):
+                print('The links are:\n',link)
+                extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
 
-    # Create a multipart message and set header
-    message = MIMEMultipart('alternative')
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-    # message["Bcc"] = receiver_email  # Recommended for mass emails
+        postData ={
+            "name": "my_template",
+            "title": "Email Template",
+            "html": " <body><p>Good Morning,<br>I hope you are well. These are the links which have been generated for your convinience.<br></p><br><ul>"+''.join(extracted_links)+"</ul><br><p>Regards,<br>Aman Mishra</p></body>"}
 
+        payload = {"{\"recipients\":[{\"email\":\"aman777444@gmail.com\"}]}",postData}
+        headers = {
+        'x-trustifi-key': os.environ['fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49'],
+        'x-trustifi-secret': os.environ['0f7c288aad8a9542f1c355b60b05e0f0'],
+        'Content-Type': 'application/json'
+        }
 
-    extracted_links=[]#empty list to store all the extracted links from the database
-
-    for link in Publisher.objects.values_list('links'):
-        print('The links are:\n',link)
-        extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
-
-    #temp=" "
-    html = """\
-            <html>
-            <body>
-                <p>Good Morning,<br>
-                I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
-                <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
-            </body>
-            </html>
-            """
-
-
-    message.attach(MIMEText(html, "html"))
-
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(sender_email, receiver_email,message.as_string()) #text
-
-    return render(request, 'email_result.html')
-
-
-
-#CODE FOR HEROKU DEPLOYMENT OF DJANGO APPLICATION
-
-
-
-
-
-
-
-
-
-
- #UNUSED CODE BLOCKS FOR LATER USE  
- # 
- # 
- #  # with open(fl + '.pdf', 'wb') as f: #writing the file to the direrctory for record
-    #     f.write(response.content) 
-    #message = MIMEMultipart("alternative", None, [MIMEText(text), MIMEText(html,'html')])
-    # filename = [f for f in glob.glob("*.pdf")]
-
-    # for i in filename:
-    #     # Open PDF file in binary mode
-    #     with open(i, "rb") as attachment:
-    #         # Add file as application/octet-stream
-    #         # Email client can usually download this automatically as attachment
-    #         part = MIMEBase("application", "octet-stream")
-    #         part.set_payload(attachment.read())
-
-    #     # Encode file in ASCII characters to send by email
-    #     encoders.encode_base64(part)
-
-    #     # Add header as key/value pair to attachment part
-    #     part.add_header(
-    #         "Content-Disposition",
-    #         f"attachment; filename= {i}",
-    #     )
-
-    #     # Add attachment to message and convert message to string
-    #     message.attach(part)
-    #     text = message.as_string()
-
-    # Log in to server using secure context and send email
+        response = requests.request('POST', url, headers = headers, data = payload)
+        print(response.json())
+        return render(request, 'email_result.html')
