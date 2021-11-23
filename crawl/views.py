@@ -109,7 +109,7 @@ def email_pdf(request):
         print('The links are:\n',link)
         extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
 
-    payload = "{\"recipients\":[{\"email\":\"aman777444@gmail.com\"}],\"title\":\"Crawler Result Dialy Mails\",\"html\":\"I hope you are well. These are the links which have been generated for your convinience.<br><p>My name is Aman btw</p>\"}"
+    payload = "{\"recipients\":[{\"email\":\"aman777444@gmail.com\"}],\"title\":\"Crawler Result Dialy Mails\",\"html\":\"I hope you are well. These are the links which have been generated for your convinience.<br>"+''.join(extracted_links)+"<p>Regards,<br>Aman Mishra</p>\"}"
     headers = {
     'x-trustifi-key': os.environ['TRUSTIFI_KEY'],
     'x-trustifi-secret': os.environ['TRUSTIFI_SECRET'],
@@ -141,15 +141,15 @@ def email_pdf(request):
 #         extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
 
 
-    html = """
-            <html>
-            <body>
-                <p>Good Morning,<br>
-                I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
-                <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
-            </body>
-            </html>
-            """
+    # html = """
+    #         <html>
+    #         <body>
+    #             <p>Good Morning,<br>
+    #             I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
+    #             <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
+    #         </body>
+    #         </html>
+    #         """
 
 
 #     message.attach(MIMEText(html, "html"))
