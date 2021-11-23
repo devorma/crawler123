@@ -72,6 +72,7 @@ def crawl(request):
             for j in search(urlStr, num_results=1):
                 all_links.append(j) #appending all the pdf url to list
             for u in all_links:
+                print('The links are:\n',u)
                 response = requests.get(u) #fetching each the url from the list
                 #if response.status_code == 200: #checking if the url is responsive and available
                 a = urlparse(u)
@@ -88,6 +89,7 @@ def crawl(request):
 
                 for row in Publisher.objects.all().reverse(): #removing all the duplicate items from the database
                     if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
+                        print('Found Duplicate item:\n',row.name)
                         row.delete()
         extracted_links=[]#empty list to store all the extracted links from the database
 
