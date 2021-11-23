@@ -31,6 +31,7 @@ from .models import Publisher
 import urllib
 
 
+
 #mailscript libraries
 import email, smtplib, ssl
 import os
@@ -40,6 +41,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import glob
 
+from os import environ
+import email.utils
 
 
 MBFACTOR = float(1 << 20) #for converting byted to Megabytes
@@ -91,67 +94,86 @@ def crawl(request):
                     if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
                         print('Found Duplicate item:\n',row.name)
                         row.delete()
-            
-            # subject = "An email with attachment from Python"
-            # sender_email = 'aman.mishra1496@gmail.com'
-            # receiver_email = 'aman777444@gmail.com'
-            # password = 'kamehameha@04'
-
-            # # Create a multipart message and set header
-            # message = MIMEMultipart('alternative')
-            # message["From"] = sender_email
-            # message["To"] = receiver_email
-            # message["Subject"] = subject
-            # # message["Bcc"] = receiver_email  # Recommended for mass emails
-
-
-            # extracted_links=[]#empty list to store all the extracted links from the database
-
-            # for link in Publisher.objects.values_list('links'):
-            #     print('The final links are:\n',link)
-            #     extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
-
-
-            # html = """
-            #         <html>
-            #         <body>
-            #             <p>Good Morning,<br>
-            #             I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
-            #             <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
-            #         </body>
-            #         </html>
-            #         """
-
-
-            # message.attach(MIMEText(html, "html"))
-
-            # context = ssl.create_default_context()
-            # with smtplib.SMTP_SSL("smtp.gmail.com", 5432, context=context) as server:
-            #     server.login(sender_email, password)
-            #     server.sendmail(sender_email, receiver_email,message.as_string()) #text
-            # for link in Publisher.objects.values_list('links'):
-            #         print('The final links are:\n',link)
-            #         extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
-
-            # url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
-            # print('The url is:\n',url)
-            # conn = http.client.HTTPSConnection("be.trustifi.com")
-            # print('The connections is:\n',conn)
-            # payload = json.dumps({"recipients": [{"email": "aman777444@gmail.com","name": "Aman Mishra","body":''.join(extracted_links)}]})
-            # print('The payload dictionary is:\n',payload)
-            # headers = {'x-trustifi-key': 'fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49','x-trustifi-secret': '0f7c288aad8a9542f1c355b60b05e0f0','Content-Type': 'application/json'}
-            # print('The header is:\n',headers)
-            # conn_req=conn.request("POST", url, payload, headers)
-            # print('The connection request is:\n',conn_req)
-            # res = conn_req.getresponse()
-            # print('The response fromt the email is :\n',res)
-            # data = res.read()
-            # print('The data which is read is:\n',data)
-            # print(data.decode("utf-8"))
     except Exception as exc:
         pass
         return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
 
+
+
+def email_pdf(request):
+    # read MailerToGo env vars
+    mailertogo_host     = environ.get('MAILERTOGO_SMTP_HOST')
+    mailertogo_port     = environ.get('MAILERTOGO_SMTP_PORT', 587)
+    mailertogo_user     = environ.get('MAILERTOGO_SMTP_USER')
+    mailertogo_password = environ.get('MAILERTOGO_SMTP_PASSWORD')
+    mailertogo_domain   = environ.get('MAILERTOGO_DOMAIN', "mydomain.com")
+
+    # sender
+    sender_user = 'noreply'
+    sender_email = "@".join([sender_user, mailertogo_domain])
+    sender_name = 'Example'
+
+    # recipient
+    recipient_email = 'aman777444@gmail.com' # change to recipient email. Make sure to use a real email address in your tests to avoid hard bounces and protect your reputation as a sender.
+    recipient_name = 'Aman Mishra'
+
+    # subject
+    subject = 'Testing Email for production'
+
+    extracted_links=[]#empty list to store all the extracted links from the database
+
+    for link in Publisher.objects.values_list('links'):
+        print('The links are:\n',link)
+        extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
+
+
+    # text body
+    body_plain = ("Hi,\n"
+        "Test from Mailer To Go 😊\n"
+        )
+
+    # html body
+    line_break = '\n' #used to replace line breaks with html breaks
+
+    body_html ="""
+            <html>
+            <body>
+                <p>Good Morning,<br>
+                I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
+                <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
+            </body>
+            </html>
+            """
+
+    # create message container
+    message = MIMEMultipart('alternative')
+    message['Subject'] = subject
+    message['From'] = email.utils.formataddr((sender_name, sender_email))
+    message['To'] = email.utils.formataddr((recipient_name, recipient_email))
+
+    # prepare plain and html message parts
+    part1 = MIMEText(body_plain, 'plain')
+    part2 = MIMEText(body_html, 'html')
+
+    # attach parts to message
+
+    message.attach(part1)
+    message.attach(part2)
+
+    # send the message.
+    try:
+        server = smtplib.SMTP(mailertogo_host, mailertogo_port)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+        server.login(mailertogo_user, mailertogo_password)
+        server.sendmail(sender_email, recipient_email, message.as_string())
+        server.close()
+    except Exception as e:
+        print ("Error: ", e)
+    else:
+        print ("Email sent!")
+    return render(request, 'email_result.html')
 
 
 # def email_pdf(request):
@@ -194,35 +216,4 @@ def crawl(request):
 #         server.sendmail(sender_email, receiver_email,message.as_string()) #text
 
 #     return render(request, 'email_result.html')
-
-
-
-def email_pdf(request):
-    return requests.post("https://api.mailgun.net/v3/postmaster@sandbox3b5cce10318447059fed8d9843390f61/messages",
-    auth=("api", "aef677448474f0a971487cdefa867c4d-7dcc6512-a3de17d9"),
-    data={"from": "sandbox3b5cce10318447059fed8d9843390f61.mailgun.org","to": ["aman777444@gmail.com"],"subject": "Testing Mail",
-              "text": "Testing some Mailgun awesomness!"}),render(request, 'email_result.html')
-#2nd part
-        # url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
-        # extracted_links=[]#empty list to store all the extracted links from the database
-        # for link in Publisher.objects.values_list('links'):
-        #         print('The links are:\n',link)
-        #         extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
-
-        # postData ={
-        #     "name": "my_template",
-        #     "title": "Email Template",
-        #     "html": " <body><p>Good Morning,<br>I hope you are well. These are the links which have been generated for your convinience.<br></p><br><ul>"+''.join(extracted_links)+"</ul><br><p>Regards,<br>Aman Mishra</p></body>"}
-
-        # payload = {"{\"recipients\":[{\"email\":\"aman777444@gmail.com\"}]}",postData}
-        # headers = {
-        # 'x-trustifi-key': os.environ['fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49'],
-        # 'x-trustifi-secret': os.environ['0f7c288aad8a9542f1c355b60b05e0f0'],
-        # 'Content-Type': 'application/json'
-        # }
-
-        # response = requests.request('POST', url, headers = headers, data = payload)
-        # print(response.json())
-        # return render(request, 'email_result.html')
-
 
