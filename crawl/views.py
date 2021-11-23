@@ -92,43 +92,43 @@ def crawl(request):
                         print('Found Duplicate item:\n',row.name)
                         row.delete()
             
-            subject = "An email with attachment from Python"
-            sender_email = 'aman.mishra1496@gmail.com'
-            receiver_email = 'aman777444@gmail.com'
-            password = 'kamehameha@04'
+            # subject = "An email with attachment from Python"
+            # sender_email = 'aman.mishra1496@gmail.com'
+            # receiver_email = 'aman777444@gmail.com'
+            # password = 'kamehameha@04'
 
-            # Create a multipart message and set header
-            message = MIMEMultipart('alternative')
-            message["From"] = sender_email
-            message["To"] = receiver_email
-            message["Subject"] = subject
-            # message["Bcc"] = receiver_email  # Recommended for mass emails
-
-
-            extracted_links=[]#empty list to store all the extracted links from the database
-
-            for link in Publisher.objects.values_list('links'):
-                print('The final links are:\n',link)
-                extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
+            # # Create a multipart message and set header
+            # message = MIMEMultipart('alternative')
+            # message["From"] = sender_email
+            # message["To"] = receiver_email
+            # message["Subject"] = subject
+            # # message["Bcc"] = receiver_email  # Recommended for mass emails
 
 
-            html = """
-                    <html>
-                    <body>
-                        <p>Good Morning,<br>
-                        I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
-                        <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
-                    </body>
-                    </html>
-                    """
+            # extracted_links=[]#empty list to store all the extracted links from the database
+
+            # for link in Publisher.objects.values_list('links'):
+            #     print('The final links are:\n',link)
+            #     extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
 
 
-            message.attach(MIMEText(html, "html"))
+            # html = """
+            #         <html>
+            #         <body>
+            #             <p>Good Morning,<br>
+            #             I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
+            #             <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
+            #         </body>
+            #         </html>
+            #         """
 
-            context = ssl.create_default_context()
-            with smtplib.SMTP_SSL("smtp.gmail.com", 5432, context=context) as server:
-                server.login(sender_email, password)
-                server.sendmail(sender_email, receiver_email,message.as_string()) #text
+
+            # message.attach(MIMEText(html, "html"))
+
+            # context = ssl.create_default_context()
+            # with smtplib.SMTP_SSL("smtp.gmail.com", 5432, context=context) as server:
+            #     server.login(sender_email, password)
+            #     server.sendmail(sender_email, receiver_email,message.as_string()) #text
             # for link in Publisher.objects.values_list('links'):
             #         print('The final links are:\n',link)
             #         extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
@@ -150,7 +150,13 @@ def crawl(request):
             # print(data.decode("utf-8"))
     except Exception as exc:
         pass
-        return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
+        return render(request, 'result.html', {'list':all_links}),requests.post(
+        "https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages",
+        auth=("api", "aef677448474f0a971487cdefa867c4d-7dcc6512-a3de17d9"),
+        data={"from": "sandbox3b5cce10318447059fed8d9843390f61.mailgun.org",
+              "to": ["aman777444@gmail.com"],
+              "subject": "Testing Mail",
+              "text": "Testing some Mailgun awesomness!"}) #redirecting to the results template page
 
 
 
@@ -158,7 +164,7 @@ def crawl(request):
 #     subject = "An email with attachment from Python"
 #     sender_email = 'aman.mishra1496@gmail.com'
 #     receiver_email = 'aman777444@gmail.com'
-#     password = 'amanelvisbella'
+#     password = 'kamehameha@04'
 
 #     # Create a multipart message and set header
 #     message = MIMEMultipart('alternative')
@@ -175,26 +181,37 @@ def crawl(request):
 #         extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
 
 
-    # html = """
-    #         <html>
-    #         <body>
-    #             <p>Good Morning,<br>
-    #             I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
-    #             <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
-    #         </body>
-    #         </html>
-    #         """
+#     html = """
+#             <html>
+#             <body>
+#                 <p>Good Morning,<br>
+#                 I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
+#                 <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
+#             </body>
+#             </html>
+#             """
 
 
 #     message.attach(MIMEText(html, "html"))
 
 #     context = ssl.create_default_context()
-#     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+#     with smtplib.SMTP_SSL("smtp.gmail.com", 5432, context=context) as server:
 #         server.login(sender_email, password)
 #         server.sendmail(sender_email, receiver_email,message.as_string()) #text
 
 #     return render(request, 'email_result.html')
 
+
+
+# def email_pdf():
+#     return requests.post(
+#         "https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages",
+#         auth=("api", "YOUR_API_KEY"),
+#         data={"from": "Excited User <mailgun@YOUR_DOMAIN_NAME>",
+#               "to": ["bar@example.com", "YOU@YOUR_DOMAIN_NAME"],
+#               "subject": "Hello",
+#               "text": "Testing some Mailgun awesomness!"})
+    
 #2nd part
         # url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
         # extracted_links=[]#empty list to store all the extracted links from the database
