@@ -189,6 +189,8 @@ def email_pdf(request):
         }
         conn.request("POST", url, payload, headers)
         res = conn.getresponse()
+        print('The response fromt the email is :\n',res)
         data = res.read()
+        print('The data which is read is:\n',data)
         print(data.decode("utf-8"))
         return render(request, 'email_result.html')
