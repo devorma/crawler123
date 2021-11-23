@@ -99,28 +99,14 @@ def crawl(request):
 
             url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
             conn = http.client.HTTPSConnection("be.trustifi.com")
-            payload = json.dumps({
-            "recipients": [
-                {
-                "email": "aman777444@gmail.com",
-                "name": "Aman Mishra",
-                "body":''.join(extracted_links)
-                }
-            ],
-            })
-            headers = {
-            'x-trustifi-key': 'fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49',
-            'x-trustifi-secret': '0f7c288aad8a9542f1c355b60b05e0f0',
-            'Content-Type': 'application/json'
-            }
-            conn.request("POST", url, payload, headers)
-            res = conn.getresponse()
+            payload = json.dumps({"recipients": [{"email": "aman777444@gmail.com","name": "Aman Mishra","body":''.join(extracted_links)}]})
+            headers = {'x-trustifi-key': 'fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49','x-trustifi-secret': '0f7c288aad8a9542f1c355b60b05e0f0','Content-Type': 'application/json'}
+            conn_req=conn.request("POST", url, payload, headers)
+            res = conn_req.getresponse()
             print('The response fromt the email is :\n',res)
             data = res.read()
             print('The data which is read is:\n',data)
             print(data.decode("utf-8"))
-
-
     except Exception as exc:
         pass
         return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
