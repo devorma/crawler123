@@ -150,13 +150,7 @@ def crawl(request):
             # print(data.decode("utf-8"))
     except Exception as exc:
         pass
-        return render(request, 'result.html', {'list':all_links}),requests.post(
-        "https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages",
-        auth=("api", "aef677448474f0a971487cdefa867c4d-7dcc6512-a3de17d9"),
-        data={"from": "sandbox3b5cce10318447059fed8d9843390f61.mailgun.org",
-              "to": ["aman777444@gmail.com"],
-              "subject": "Testing Mail",
-              "text": "Testing some Mailgun awesomness!"}) #redirecting to the results template page
+        return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
 
 
 
@@ -203,15 +197,14 @@ def crawl(request):
 
 
 
-# def email_pdf():
-#     return requests.post(
-#         "https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages",
-#         auth=("api", "YOUR_API_KEY"),
-#         data={"from": "Excited User <mailgun@YOUR_DOMAIN_NAME>",
-#               "to": ["bar@example.com", "YOU@YOUR_DOMAIN_NAME"],
-#               "subject": "Hello",
-#               "text": "Testing some Mailgun awesomness!"})
-    
+def email_pdf():
+    return requests.post(
+        "https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages",
+        auth=("api", "aef677448474f0a971487cdefa867c4d-7dcc6512-a3de17d9"),
+        data={"from": "sandbox3b5cce10318447059fed8d9843390f61.mailgun.org",
+              "to": ["aman777444@gmail.com"],
+              "subject": "Testing Mail",
+              "text": "Testing some Mailgun awesomness!"})
 #2nd part
         # url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
         # extracted_links=[]#empty list to store all the extracted links from the database
@@ -236,37 +229,3 @@ def crawl(request):
         # return render(request, 'email_result.html')
 
 
-
-
-
-# def email_pdf(request):
-
-#         extracted_links=[]#empty list to store all the extracted links from the database
-
-#         for link in Publisher.objects.values_list('links'):
-#                 print('The links are:\n',link)
-#                 extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
-
-#         url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
-#         conn = http.client.HTTPSConnection("be.trustifi.com")
-#         payload = json.dumps({
-#         "recipients": [
-#             {
-#             "email": "aman777444@gmail.com",
-#             "name": "Aman Mishra",
-#             "body":''.join(extracted_links)
-#             }
-#         ],
-#         })
-#         headers = {
-#         'x-trustifi-key': 'fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49',
-#         'x-trustifi-secret': '0f7c288aad8a9542f1c355b60b05e0f0',
-#         'Content-Type': 'application/json'
-#         }
-#         conn.request("POST", url, payload, headers)
-#         res = conn.getresponse()
-#         print('The response fromt the email is :\n',res)
-#         data = res.read()
-#         print('The data which is read is:\n',data)
-#         print(data.decode("utf-8"))
-#         return render(request, 'email_result.html')
