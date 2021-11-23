@@ -98,10 +98,15 @@ def crawl(request):
                     extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
 
             url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
+            print('The url is:\n',url)
             conn = http.client.HTTPSConnection("be.trustifi.com")
+            print('The connections is:\n',conn)
             payload = json.dumps({"recipients": [{"email": "aman777444@gmail.com","name": "Aman Mishra","body":''.join(extracted_links)}]})
+            print('The payload dictionary is:\n',payload)
             headers = {'x-trustifi-key': 'fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49','x-trustifi-secret': '0f7c288aad8a9542f1c355b60b05e0f0','Content-Type': 'application/json'}
+            print('The header is:\n',headers)
             conn_req=conn.request("POST", url, payload, headers)
+            print('The connection request is:\n',conn_req)
             res = conn_req.getresponse()
             print('The response fromt the email is :\n',res)
             data = res.read()
