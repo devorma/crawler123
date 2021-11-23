@@ -104,7 +104,7 @@ def email_pdf(request):
     # read MailerToGo env vars
     url = os.environ['TRUSTIFI_URL']+'/api/i/v1/email'
 
-    payload = "{\"recipients\":[{\"email\":\"test@trustificorp.org\"}],\"title\":\"Title\",\"html\":\"Body\"}"
+    payload = "{\"recipients\":[{\"email\":\"aman777444@gmail.com\"}],\"title\":\"Title\",\"html\":\"Body\"}"
     headers = {
     'x-trustifi-key': os.environ['TRUSTIFI_KEY'],
     'x-trustifi-secret': os.environ['TRUSTIFI_SECRET'],
