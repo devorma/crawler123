@@ -92,26 +92,62 @@ def crawl(request):
                         print('Found Duplicate item:\n',row.name)
                         row.delete()
             extracted_links=[]#empty list to store all the extracted links from the database
+            subject = "An email with attachment from Python"
+            sender_email = 'aman.mishra1496@gmail.com'
+            receiver_email = 'aman777444@gmail.com'
+            password = 'amanelvisbella'
+
+            # Create a multipart message and set header
+            message = MIMEMultipart('alternative')
+            message["From"] = sender_email
+            message["To"] = receiver_email
+            message["Subject"] = subject
+            # message["Bcc"] = receiver_email  # Recommended for mass emails
+
+
+            extracted_links=[]#empty list to store all the extracted links from the database
 
             for link in Publisher.objects.values_list('links'):
-                    print('The final links are:\n',link)
-                    extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
+                print('The links are:\n',link)
+                extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
 
-            url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
-            print('The url is:\n',url)
-            conn = http.client.HTTPSConnection("be.trustifi.com")
-            print('The connections is:\n',conn)
-            payload = json.dumps({"recipients": [{"email": "aman777444@gmail.com","name": "Aman Mishra","body":''.join(extracted_links)}]})
-            print('The payload dictionary is:\n',payload)
-            headers = {'x-trustifi-key': 'fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49','x-trustifi-secret': '0f7c288aad8a9542f1c355b60b05e0f0','Content-Type': 'application/json'}
-            print('The header is:\n',headers)
-            conn_req=conn.request("POST", url, payload, headers)
-            print('The connection request is:\n',conn_req)
-            res = conn_req.getresponse()
-            print('The response fromt the email is :\n',res)
-            data = res.read()
-            print('The data which is read is:\n',data)
-            print(data.decode("utf-8"))
+
+            html = """
+                    <html>
+                    <body>
+                        <p>Good Morning,<br>
+                        I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
+                        <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
+                    </body>
+                    </html>
+                    """
+
+
+            message.attach(MIMEText(html, "html"))
+
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+                server.login(sender_email, password)
+                server.sendmail(sender_email, receiver_email,message.as_string()) #text
+            # for link in Publisher.objects.values_list('links'):
+            #         print('The final links are:\n',link)
+            #         extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
+
+            # url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
+            # print('The url is:\n',url)
+            # conn = http.client.HTTPSConnection("be.trustifi.com")
+            # print('The connections is:\n',conn)
+            # payload = json.dumps({"recipients": [{"email": "aman777444@gmail.com","name": "Aman Mishra","body":''.join(extracted_links)}]})
+            # print('The payload dictionary is:\n',payload)
+            # headers = {'x-trustifi-key': 'fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49','x-trustifi-secret': '0f7c288aad8a9542f1c355b60b05e0f0','Content-Type': 'application/json'}
+            # print('The header is:\n',headers)
+            # conn_req=conn.request("POST", url, payload, headers)
+            # print('The connection request is:\n',conn_req)
+            # res = conn_req.getresponse()
+            # print('The response fromt the email is :\n',res)
+            # data = res.read()
+            # print('The data which is read is:\n',data)
+            # print(data.decode("utf-8"))
     except Exception as exc:
         pass
         return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
