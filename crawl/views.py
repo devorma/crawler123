@@ -102,77 +102,16 @@ def crawl(request):
 
 def email_pdf(request):
     # read MailerToGo env vars
-    mailertogo_host     = environ.get('MAILERTOGO_SMTP_HOST')
-    mailertogo_port     = environ.get('MAILERTOGO_SMTP_PORT', 587)
-    mailertogo_user     = environ.get('MAILERTOGO_SMTP_USER')
-    mailertogo_password = environ.get('MAILERTOGO_SMTP_PASSWORD')
-    mailertogo_domain   = environ.get('MAILERTOGO_DOMAIN', "mydomain.com")
+    url = os.environ['TRUSTIFI_URL']+'/api/i/v1/email'
 
-    # sender
-    sender_user = 'noreply'
-    sender_email = "@".join([sender_user, mailertogo_domain])
-    sender_name = 'Example'
+    payload = "{\"recipients\":[{\"email\":\"test@trustificorp.org\"}],\"title\":\"Title\",\"html\":\"Body\"}"
+    headers = {
+    'x-trustifi-key': os.environ['TRUSTIFI_KEY'],
+    'x-trustifi-secret': os.environ['TRUSTIFI_SECRET'],
+    'Content-Type': 'application/json'
+    }
 
-    # recipient
-    recipient_email = 'aman777444@gmail.com' # change to recipient email. Make sure to use a real email address in your tests to avoid hard bounces and protect your reputation as a sender.
-    recipient_name = 'Aman Mishra'
-
-    # subject
-    subject = 'Testing Email for production'
-
-    extracted_links=[]#empty list to store all the extracted links from the database
-
-    for link in Publisher.objects.values_list('links'):
-        print('The links are:\n',link)
-        extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
-
-
-    # text body
-    body_plain = ("Hi,\n"
-        "Test from Mailer To Go 😊\n"
-        )
-
-    # html body
-    line_break = '\n' #used to replace line breaks with html breaks
-
-    body_html ="""
-            <html>
-            <body>
-                <p>Good Morning,<br>
-                I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
-                <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
-            </body>
-            </html>
-            """
-
-    # create message container
-    message = MIMEMultipart('alternative')
-    message['Subject'] = subject
-    message['From'] = email.utils.formataddr((sender_name, sender_email))
-    message['To'] = email.utils.formataddr((recipient_name, recipient_email))
-
-    # prepare plain and html message parts
-    part1 = MIMEText(body_plain, 'plain')
-    part2 = MIMEText(body_html, 'html')
-
-    # attach parts to message
-
-    message.attach(part1)
-    message.attach(part2)
-
-    # send the message.
-    try:
-        server = smtplib.SMTP(mailertogo_host, mailertogo_port)
-        server.ehlo()
-        server.starttls()
-        server.ehlo()
-        server.login(mailertogo_user, mailertogo_password)
-        server.sendmail(sender_email, recipient_email, message.as_string())
-        server.close()
-    except Exception as e:
-        print ("Error: ", e)
-    else:
-        print ("Email sent!")
+    response = requests.request('POST', url, headers = headers, data = payload)
     return render(request, 'email_result.html')
 
 
