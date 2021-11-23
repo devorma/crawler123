@@ -91,7 +91,7 @@ def crawl(request):
                     if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
                         print('Found Duplicate item:\n',row.name)
                         row.delete()
-            extracted_links=[]#empty list to store all the extracted links from the database
+            
             subject = "An email with attachment from Python"
             sender_email = 'aman.mishra1496@gmail.com'
             receiver_email = 'aman777444@gmail.com'
@@ -108,7 +108,7 @@ def crawl(request):
             extracted_links=[]#empty list to store all the extracted links from the database
 
             for link in Publisher.objects.values_list('links'):
-                print('The links are:\n',link)
+                print('The final links are:\n',link)
                 extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
 
 
@@ -126,7 +126,7 @@ def crawl(request):
             message.attach(MIMEText(html, "html"))
 
             context = ssl.create_default_context()
-            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+            with smtplib.SMTP_SSL("smtp.gmail.com", 5432, context=context) as server:
                 server.login(sender_email, password)
                 server.sendmail(sender_email, receiver_email,message.as_string()) #text
             # for link in Publisher.objects.values_list('links'):
