@@ -95,7 +95,7 @@ def crawl(request):
             subject = "An email with attachment from Python"
             sender_email = 'aman.mishra1496@gmail.com'
             receiver_email = 'aman777444@gmail.com'
-            password = 'amanelvisbella'
+            password = 'kamehameha@04'
 
             # Create a multipart message and set header
             message = MIMEMultipart('alternative')
