@@ -91,34 +91,34 @@ def crawl(request):
                     if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
                         print('Found Duplicate item:\n',row.name)
                         row.delete()
-        extracted_links=[]#empty list to store all the extracted links from the database
+            extracted_links=[]#empty list to store all the extracted links from the database
 
-        for link in Publisher.objects.values_list('links'):
-                print('The links are:\n',link)
-                extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
+            for link in Publisher.objects.values_list('links'):
+                    print('The final links are:\n',link)
+                    extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
 
-        url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
-        conn = http.client.HTTPSConnection("be.trustifi.com")
-        payload = json.dumps({
-        "recipients": [
-            {
-            "email": "aman777444@gmail.com",
-            "name": "Aman Mishra",
-            "body":''.join(extracted_links)
+            url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
+            conn = http.client.HTTPSConnection("be.trustifi.com")
+            payload = json.dumps({
+            "recipients": [
+                {
+                "email": "aman777444@gmail.com",
+                "name": "Aman Mishra",
+                "body":''.join(extracted_links)
+                }
+            ],
+            })
+            headers = {
+            'x-trustifi-key': 'fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49',
+            'x-trustifi-secret': '0f7c288aad8a9542f1c355b60b05e0f0',
+            'Content-Type': 'application/json'
             }
-        ],
-        })
-        headers = {
-        'x-trustifi-key': 'fff4ae6104486fc20de26cb0501f4310c663f9c0cbc8bf49',
-        'x-trustifi-secret': '0f7c288aad8a9542f1c355b60b05e0f0',
-        'Content-Type': 'application/json'
-        }
-        conn.request("POST", url, payload, headers)
-        res = conn.getresponse()
-        print('The response fromt the email is :\n',res)
-        data = res.read()
-        print('The data which is read is:\n',data)
-        print(data.decode("utf-8"))
+            conn.request("POST", url, payload, headers)
+            res = conn.getresponse()
+            print('The response fromt the email is :\n',res)
+            data = res.read()
+            print('The data which is read is:\n',data)
+            print(data.decode("utf-8"))
 
 
     except Exception as exc:
