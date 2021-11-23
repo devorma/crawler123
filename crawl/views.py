@@ -197,14 +197,9 @@ def crawl(request):
 
 
 
-def email_pdf():
-    return requests.post(
-        "https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages",
-        auth=("api", "aef677448474f0a971487cdefa867c4d-7dcc6512-a3de17d9"),
-        data={"from": "sandbox3b5cce10318447059fed8d9843390f61.mailgun.org",
-              "to": ["aman777444@gmail.com"],
-              "subject": "Testing Mail",
-              "text": "Testing some Mailgun awesomness!"})
+def email_pdf(request):
+    return requests.post("https://api.mailgun.net/v3/YOUR_DOMAIN_NAME/messages",auth=("api", "aef677448474f0a971487cdefa867c4d-7dcc6512-a3de17d9"),data={"from": "sandbox3b5cce10318447059fed8d9843390f61.mailgun.org","to": ["aman777444@gmail.com"],"subject": "Testing Mail",
+              "text": "Testing some Mailgun awesomness!"}),render(request, 'email_result.html')
 #2nd part
         # url = os.environ['https://be.trustifi.com']+'/api/i/v1/email'
         # extracted_links=[]#empty list to store all the extracted links from the database
