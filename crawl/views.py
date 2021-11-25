@@ -91,8 +91,10 @@ def crawl(request):
                 ### NLP SPACY
                 String = "La Camera di Commercio territorialmente competente effettuerà controlli su un campione pari" #the search string from a pdf 
                 print('The search string is :\n',String)
-                pdf_reader= pdf.PdfFileReader(a)
-                if pdf_reader.getIsEncrypted()=='False' and pdf_reader.getNumPages()>0:
+                pdf_reader= pdf.PdfFileReader(a+ ".pdf",'rb')
+                print('The pdf is:\n',pdf_reader)
+                #input1 = pdf.PdfFileReader(file("http://example.com/a.pdf", "rb"))
+                if pdf_reader.getNumPages()>0: #pdf_reader.getIsEncrypted()=='False' and
                     print('The condition is met for the pdf named:\n',a)
                     NumPages = pdf_reader.getNumPages()
                     for i in range(0,NumPages):
