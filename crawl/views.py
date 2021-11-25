@@ -85,15 +85,15 @@ def crawl(request):
             for u in all_links:
                 print('The links are:\n',u)
                 response = requests.get(u) #fetching each the url from the list
-                #if response.status_code == 200: #checking if the url is responsive and available
+                #if response.status_code == 200: #checking if the url is responsive and available but removed due to time complexity issues with heroku
                 a = urlparse(u)
                 fl=os.path.basename(a.path) #parsing the filename from the url
                 ### NLP SPACY
                 String = "La Camera di Commercio territorialmente competente effettuerà controlli su un campione pari" #the search string from a pdf 
                 print('The search string is :\n',String)
-                pdf_reader= pdf.PdfFileReader(fl)
+                pdf_reader= pdf.PdfFileReader(a)
                 if pdf_reader.getIsEncrypted()=='False' and pdf_reader.getNumPages()>0:
-                    print('The condition is met for the pdf named:\n',fl)
+                    print('The condition is met for the pdf named:\n',a)
                     NumPages = pdf_reader.getNumPages()
                     for i in range(0,NumPages):
                         PageObj = pdf_reader.getPage(i)
