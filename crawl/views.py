@@ -44,6 +44,14 @@ import glob
 from os import environ
 import email.utils
 
+#importing libraries for reading pdf and spacy
+import PyPDF2 as pdf
+import spacy
+
+from spacy.lang.it.stop_words import STOP_WORDS as stopwords #getting the italian stop words
+
+
+
 
 MBFACTOR = float(1 << 20) #for converting byted to Megabytes
 
@@ -80,6 +88,21 @@ def crawl(request):
                 #if response.status_code == 200: #checking if the url is responsive and available
                 a = urlparse(u)
                 fl=os.path.basename(a.path) #parsing the filename from the url
+                ### NLP SPACY
+                String = "La Camera di Commercio territorialmente competente effettuerà controlli su un campione pari" #the search string from a pdf 
+                pdf_reader= pdf.PdfFileReader(fl)
+                if pdf_reader.getIsEncrypted()=='False' and pdf_reader.getNumPages()>0:
+                    NumPages = pdf_reader.getNumPages()
+                    for i in range(0,NumPages):
+                        PageObj = pdf_reader.getPage(i)
+                        print("this is page " + str(i))
+                        Text = PageObj.extractText() #Extracting the text from the pdf page and then using the nlp to find the matching pattersns in the later stage 
+                        print(f'The extracted text from the page {i} is :\n{Text}')
+                        ResSearch = re.search(String, Text)
+                    pass #This will only execute the unencrypted files and valid files
+                else:
+                    break
+                ###
                 file_size=response.headers.get('content-length', 0)
                 content_type=response.headers.get('Content-Type', 0)
                 last_modified=response.headers.get('Last-Modified', 0)
@@ -115,49 +138,6 @@ def email_pdf(request):
     'x-trustifi-secret': os.environ['TRUSTIFI_SECRET'],
     'Content-Type': 'application/json'
     }
-
+    
     response = requests.request('POST', url, headers = headers, data = payload)
     return render(request, 'email_result.html')
-
-
-# def email_pdf(request):
-#     subject = "An email with attachment from Python"
-#     sender_email = 'aman.mishra1496@gmail.com'
-#     receiver_email = 'aman777444@gmail.com'
-#     password = 'kamehameha@04'
-
-#     # Create a multipart message and set header
-#     message = MIMEMultipart('alternative')
-#     message["From"] = sender_email
-#     message["To"] = receiver_email
-#     message["Subject"] = subject
-#     # message["Bcc"] = receiver_email  # Recommended for mass emails
-
-
-#     extracted_links=[]#empty list to store all the extracted links from the database
-
-#     for link in Publisher.objects.values_list('links'):
-#         print('The links are:\n',link)
-#         extracted_links.append('<li><a href='+link[0]+">"+link[0]+"</a></li>") #appending all the links to a list
-
-
-    # html = """
-    #         <html>
-    #         <body>
-    #             <p>Good Morning,<br>
-    #             I hope you are well. These are the links which have been generated for your convinience.<br></p><br>
-    #             <ul>"""+''.join(extracted_links)+"""</ul><br><p>Regards,<br>Aman Mishra</p>
-    #         </body>
-    #         </html>
-    #         """
-
-
-#     message.attach(MIMEText(html, "html"))
-
-#     context = ssl.create_default_context()
-#     with smtplib.SMTP_SSL("smtp.gmail.com", 5432, context=context) as server:
-#         server.login(sender_email, password)
-#         server.sendmail(sender_email, receiver_email,message.as_string()) #text
-
-#     return render(request, 'email_result.html')
-
