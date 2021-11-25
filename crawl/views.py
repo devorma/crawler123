@@ -101,6 +101,7 @@ def crawl(request):
                         Text = PageObj.extractText() #Extracting the text from the pdf page and then using the nlp to find the matching pattersns in the later stage 
                         print(f'The extracted text from the page {i} is :\n{Text}')
                         ResSearch = re.search(String, Text)
+                        print('The ResSearch result is :\n',ResSearch)
                         if ResSearch =='True':
                             file_size=response.headers.get('content-length', 0)
                             content_type=response.headers.get('Content-Type', 0)
