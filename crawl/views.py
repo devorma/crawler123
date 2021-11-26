@@ -139,7 +139,7 @@ def crawl(request):
                 file_name=os.path.basename(file_parse.path)  
                 print('The file name in the last loop is:\n',file_name)  
                 
-                pdfFileObj = open(file, 'rb')
+                pdfFileObj = open(str(file), 'rb')
                 pdf_reader= pdf.PdfFileReader(pdfFileObj)
 
                 NumPages = pdf_reader.getNumPages()
