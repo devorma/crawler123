@@ -132,12 +132,17 @@ def crawl(request):
         
             for file in file_links:
                 print('The file link in last loop is:\n',file)
+                
                 response = urllib.request.urlopen(file)
                 file_parse = urlparse(u)
-                file_name=os.path.basename(file_parse.path)    
+                file_name=os.path.basename(file_parse.path)  
+                print('The file name in the last loop is:\n',file_name)  
+                
                 file = open(file_name + ".pdf", 'rb')
-                # pdf_reader= pdf.PdfFileReader(file, "rb")
                 print('The pdf is:\n',file)
+
+                NumPages = file.getNumPages()
+                print('The number of pages in the pdf are:\n',NumPages)
                     
     except Exception as exc:
         pass
