@@ -134,7 +134,7 @@ def crawl(request):
                 print('The file link in last loop is:\n',file)
                 
                 response = urllib.request.urlopen(file)
-                file_parse = urlparse(u)
+                file_parse = urlparse(file)
                 file_name=os.path.basename(file_parse.path)  
                 print('The file name in the last loop is:\n',file_name)  
                 
