@@ -90,25 +90,25 @@ def crawl(request):
                 a = urlparse(u)
                 fl=os.path.basename(a.path) #parsing the filename from the url
                 ### NLP SPACY
-                String = "La Camera di Commercio territorialmente competente effettuerà controlli su un campione pari" #the search string from a pdf 
-                print('The search string is :\n',String)
+                # String = "La Camera di Commercio territorialmente competente effettuerà controlli su un campione pari" #the search string from a pdf 
+                # print('The search string is :\n',String)
                 
-                file_read=urlopen(u).read()
-                print('The pdf with urlopen is:\n',file_read)
+                # file_read=urlopen(u).read()
+                # print('The pdf with urlopen is:\n',file_read)
                 
-                file = open(fl + ".pdf", 'wb')
-                pdf_reader= pdf.PdfFileReader(file(u, "rb"))
-                print('The pdf is:\n',pdf_reader)
+                # file = open(fl + ".pdf", 'wb')
+                # pdf_reader= pdf.PdfFileReader(file(u, "rb"))
+                # print('The pdf is:\n',pdf_reader)
                 
-                NumPages = pdf_reader.getNumPages()
-                print('The number of pages in the pdf are:\n',NumPages)
+                # NumPages = pdf_reader.getNumPages()
+                # print('The number of pages in the pdf are:\n',NumPages)
 
-                PageObj = pdf_reader.getPage(i)
-                print("This is page " + str(i))
-                Text = PageObj.extractText() #Extracting the text from the pdf page and then using the nlp to find the matching pattersns in the later stage 
-                print(f'The extracted text from the page {i} is :\n{Text}')
-                ResSearch = re.search(String, Text)
-                print('The ResSearch result is :\n',ResSearch)
+                # PageObj = pdf_reader.getPage(i)
+                # print("This is page " + str(i))
+                # Text = PageObj.extractText() #Extracting the text from the pdf page and then using the nlp to find the matching pattersns in the later stage 
+                # print(f'The extracted text from the page {i} is :\n{Text}')
+                # ResSearch = re.search(String, Text)
+                # print('The ResSearch result is :\n',ResSearch)
                 # if ResSearch =='True':
                 file_size=response.headers.get('content-length', 0)
                 content_type=response.headers.get('Content-Type', 0)
