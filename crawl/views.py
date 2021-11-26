@@ -124,15 +124,15 @@ def crawl(request):
                     if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
                         print('Found Duplicate item:\n',row.name)
                         row.delete()
-        file_links=[]   
-        #now extracting files from the links produced:
-        for link in Publisher.objects.values_list('links'):
-            print('The final selected links are:\n',link)
-            file_links.append(link[0])
+            file_links=[]   
+            #now extracting files from the links produced:
+            for link in Publisher.objects.values_list('links'):
+                print('The final selected links are:\n',link)
+                file_links.append(link[0])
         
-        for file in file_links:
-            pdf_reader= pdf.PdfFileReader(file, "rb")
-            print('The pdf is:\n',pdf_reader)
+            for file in file_links:
+                pdf_reader= pdf.PdfFileReader(file, "rb")
+                print('The pdf is:\n',pdf_reader)
 
                     
     except Exception as exc:
