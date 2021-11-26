@@ -140,7 +140,7 @@ def crawl(request):
                 print('The file name in the last loop is:\n',file_name)  
                 
                 #file = open(file_name, 'rb')
-                pdf_reader= pdf.PdfFileReader(file, "rb")
+                pdf_reader= pdf.PdfFileReader(file_name, "rb")
                 print('The pdf is:\n',pdf_reader)
 
                 NumPages = pdf_reader.getNumPages()
