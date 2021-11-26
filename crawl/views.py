@@ -139,10 +139,11 @@ def crawl(request):
                 file_name=os.path.basename(file_parse.path)  
                 print('The file name in the last loop is:\n',file_name)  
                 
-                file = open(file_name, 'rb')
-                print('The pdf is:\n',file)
+                #file = open(file_name, 'rb')
+                pdf_reader= pdf.PdfFileReader(file, "rb")
+                print('The pdf is:\n',pdf_reader)
 
-                NumPages = file.getNumPages()
+                NumPages = pdf_reader.getNumPages()
                 print('The number of pages in the pdf are:\n',NumPages)
                     
     except Exception as exc:
