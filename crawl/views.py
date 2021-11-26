@@ -47,7 +47,7 @@ import email.utils
 #importing libraries for reading pdf and spacy
 import PyPDF2 as pdf
 import spacy
-from StringIO import StringIO
+# from StringIO import StringIO
 
 from spacy.lang.it.stop_words import STOP_WORDS as stopwords #getting the italian stop words
 
