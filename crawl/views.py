@@ -20,7 +20,7 @@ import requests
 import googlesearch
 from urllib.parse import urljoin, unquote
 from bs4 import BeautifulSoup
-
+import urllib.request
 import os
 from urllib.parse import urlparse
 import smtplib
@@ -131,9 +131,12 @@ def crawl(request):
                 file_links.append(link[0])
         
             for file in file_links:
-                pdf_reader= pdf.PdfFileReader(file, "rb")
-                print('The pdf is:\n',pdf_reader)
-
+                response = urllib.request.urlopen(file)
+                file_parse = urlparse(u)
+                file_name=os.path.basename(file_parse.path)    
+                file = open(file_name + ".pdf", 'rb')
+                # pdf_reader= pdf.PdfFileReader(file, "rb")
+                print('The pdf is:\n',file)
                     
     except Exception as exc:
         pass
