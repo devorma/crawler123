@@ -124,24 +124,17 @@ def crawl(request):
                     if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
                         print('Found Duplicate item:\n',row.name)
                         row.delete()
-                
-                    #This will only execute the unencrypted files and valid files which contain the search string
+        file_links=[]   
+        #now extracting files from the links produced:
+        for link in Publisher.objects.values_list('links'):
+            print('The final selected links are:\n',link)
+            file_links.append(link[0])
+        
+        for file in file_links:
+            pdf_reader= pdf.PdfFileReader(file, "rb")
+            print('The pdf is:\n',pdf_reader)
 
-                ###The previous v1.0 version is codeed below
-                # file_size=response.headers.get('content-length', 0)
-                # content_type=response.headers.get('Content-Type', 0)
-                # last_modified=response.headers.get('Last-Modified', 0)
-                # expiry_date=response.headers.get('Expires', 0)
-                # cache_control=response.headers.get('Cache', 0)
-                # server=response.headers.get('Server', 0)
-
-                # pub_instance = Publisher.objects.create(name=fl,links=u,file_size=file_size,content_type=content_type,last_modified_y=last_modified,expiry_date_y=expiry_date,cache_control_y=cache_control,server_y=server) #creating the entry in the database
-                # pub_instance.save() #saving the info for each url to database
-
-                # for row in Publisher.objects.all().reverse(): #removing all the duplicate items from the database
-                #     if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
-                #         print('Found Duplicate item:\n',row.name)
-                #         row.delete()
+                    
     except Exception as exc:
         pass
         return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
