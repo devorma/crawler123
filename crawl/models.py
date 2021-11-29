@@ -16,6 +16,6 @@ class Publisher(models.Model):
      #storing the files to db
     #  filepath= models.FileField(upload_to='files/', null=True, verbose_name="")
      def __str__(self):
-         return self.headline + self.name + ": " + str(self.filepath)
+         return self.headline
 
 
