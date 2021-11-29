@@ -24,12 +24,14 @@ import urllib.request
 import os
 from urllib.parse import urlparse
 import smtplib
+
 #Connection with the Database
 # import mysql.connector
  
 from .models import Publisher
 import urllib
 from urllib.request import urlopen
+from urllib import re
 
 
 #mailscript libraries
@@ -48,10 +50,9 @@ import email.utils
 import PyPDF2 as pdf
 import spacy
 # from StringIO import StringIO
-
 from spacy.lang.it.stop_words import STOP_WORDS as stopwords #getting the italian stop words
 
-
+from urllib3 import Request, urlopen
 
 
 MBFACTOR = float(1 << 20) #for converting byted to Megabytes
@@ -124,6 +125,7 @@ def crawl(request):
                     if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
                         print('Found Duplicate item:\n',row.name)
                         row.delete()
+                
             file_links=[]   
             #now extracting files from the links produced:
             for link in Publisher.objects.values_list('links'):
@@ -139,9 +141,11 @@ def crawl(request):
                 file_name=os.path.basename(file_parse.path)  
                 print('The file name in the last loop is:\n',file_name)  
                 
-                pdfFileObj = open(str(file), 'rb')
-                pdf_reader= pdf.PdfFileReader(pdfFileObj)
-
+                #this part is not working and all the working parts before this area.
+                file_read=urllib.request.urlopen(file)
+                print('The pdf with urlopen is:\n',file_read)
+                pdf_reader= pdf.PdfFileReader(file_read, "rb")
+            
                 NumPages = pdf_reader.getNumPages()
                 print('The number of pages in the pdf are:\n',NumPages)
                     

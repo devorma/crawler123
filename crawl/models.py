@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 class Publisher(models.Model):
@@ -12,15 +13,9 @@ class Publisher(models.Model):
      expiry_date_y = models.DateTimeField(auto_now_add=True)
      cache_control_y = models.CharField(max_length=200) 
      server_y = models.CharField(max_length=200) 
+     #storing the files to db
+    #  filepath= models.FileField(upload_to='files/', null=True, verbose_name="")
      def __str__(self):
-         return self.headline
+         return self.headline + self.name + ": " + str(self.filepath)
 
 
-
-# class Entry(models.Model):
-#     # blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
-#     name_text = models.TextField()
-#     links_text= models.TextField()
-#     date_added=models.DateTimeField()
-#     def __str__(self):
-#         return self.headline
