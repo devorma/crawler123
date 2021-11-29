@@ -31,7 +31,6 @@ import smtplib
 from .models import Publisher
 import urllib
 from urllib.request import urlopen
-from urllib import re
 
 
 #mailscript libraries
