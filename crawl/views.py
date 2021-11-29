@@ -148,16 +148,20 @@ def crawl(request):
                 print('The pdf with url object is:\n',file_read)
 
                 
-                temp=file_read.data
+                temp=file_read.read()
 
-                print('The temp obj is:\n:',temp)
+                print('The status file is:\n',file_read.status)
                 print('The file read json obj is:\n:',file_read.json())
+                print('The temp file is:\n',temp.decode('utf-8'))
+
+                # print('The temp obj is:\n:',temp)
+                # print('The file read json obj is:\n:',file_read.json())
 
 
-                pdf_reader= pdf.PdfFileReader(file_read, "rb")
-                print('The pdf readerr obj is:\n:',pdf_reader)
-                NumPages = pdf_reader.getNumPages()
-                print('The number of pages in the pdf are:\n',NumPages)
+                # pdf_reader= pdf.PdfFileReader(file_read, "rb")
+                # print('The pdf readerr obj is:\n:',pdf_reader)
+                # NumPages = pdf_reader.getNumPages()
+                # print('The number of pages in the pdf are:\n',NumPages)
                 # print('The read file is :\n',temp)
                 # with open(file_name, 'wb') as out:
                 #     shutil.copyfileobj(file_read, out)
