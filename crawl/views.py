@@ -49,7 +49,7 @@ import spacy
 # from StringIO import StringIO
 from spacy.lang.it.stop_words import STOP_WORDS as stopwords #getting the italian stop words
 
-from urllib import Request, urlopen
+from urllib import request,urlopen
 
 
 MBFACTOR = float(1 << 20) #for converting byted to Megabytes
