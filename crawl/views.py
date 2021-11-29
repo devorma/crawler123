@@ -153,7 +153,7 @@ def crawl(request):
                 print('The temp obj is:\n:',temp)
 
 
-                pdf_reader= pdf.PdfFileReader(temp, "rb")
+                pdf_reader= pdf.PdfFileReader(file_read, "rb")
                 print('The pdf readerr obj is:\n:',pdf_reader)
                 NumPages = pdf_reader.getNumPages()
                 print('The number of pages in the pdf are:\n',NumPages)
