@@ -128,18 +128,15 @@ def crawl(request):
                 
                 print('The file name in the last loop is:\n',file_name)  
 
-                print(f'The read content is\n {response.content}')
-                print(f'The read status code is \n{response.status_code}')
-                print(f'The read response is \n{response.raw.read(20)}')
+                # print(f'The read content is\n {response.content}')
+                # print(f'The read status code is \n{response.status_code}')
+                # print(f'The read response is \n{response.raw.read(20)}')
 
-
-
-
-
-                # pdf_reader= pdf.PdfFileReader(file_read, "rb")
-            
-                # NumPages = pdf_reader.getNumPages()
-                # print('The number of pages in the pdf are:\n',NumPages)
+                pdf_reader= pdf.PdfFileReader(response, "rb")
+                print(f'The pdf_reader is:\n{pdf_reader}')
+                
+                NumPages = pdf_reader.getNumPages()
+                print('The number of pages in the pdf are:\n',NumPages)
                     
     except Exception as exc:
         return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
