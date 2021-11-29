@@ -151,6 +151,7 @@ def crawl(request):
                 temp=file_read.data
 
                 print('The temp obj is:\n:',temp)
+                print('The file read json obj is:\n:',file_read.json())
 
 
                 pdf_reader= pdf.PdfFileReader(file_read, "rb")
