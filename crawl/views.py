@@ -132,9 +132,9 @@ def crawl(request):
                 # print(f'The read status code is \n{response.status_code}')
                 # print(f'The read response is \n{response.raw.read(20)}')
 
-                pdf_reader= pdf.PdfFileReader(response, "rb")
+                pdf_reader= pdf.PdfFileReader(response.content, "rb")
                 print(f'The pdf_reader is:\n{pdf_reader}')
-                
+
                 NumPages = pdf_reader.getNumPages()
                 print('The number of pages in the pdf are:\n',NumPages)
                     
