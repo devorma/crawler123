@@ -128,9 +128,7 @@ def crawl(request):
                 
                 print('The file name in the last loop is:\n',file_name)  
 
-                # print(f'The read content is\n {response.content}')
-                # print(f'The read status code is \n{response.status_code}')
-                # print(f'The read response is \n{response.raw.read(20)}')
+                print('The encoding is:\n',response.encoding)
 
                 pdf_reader= pdf.PdfFileReader(response.content, "rb")
                 print(f'The pdf_reader is:\n{pdf_reader}')
