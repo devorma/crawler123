@@ -20,17 +20,15 @@ import requests
 import googlesearch
 from urllib.parse import urljoin, unquote
 from bs4 import BeautifulSoup
-import urllib.request
 import os
 from urllib.parse import urlparse
-import smtplib
+
+
 
 #Connection with the Database
 # import mysql.connector
  
 from .models import Publisher
-import urllib
-from urllib.request import urlopen
 
 
 #mailscript libraries
@@ -51,7 +49,7 @@ import spacy
 # from StringIO import StringIO
 from spacy.lang.it.stop_words import STOP_WORDS as stopwords #getting the italian stop words
 
-from urllib3 import Request, urlopen
+from urllib import Request, urlopen
 
 
 MBFACTOR = float(1 << 20) #for converting byted to Megabytes
