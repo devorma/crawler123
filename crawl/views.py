@@ -139,7 +139,7 @@ def crawl(request):
                 print('The file name in the last loop is:\n',file_name)  
                 
                 #this part is not working and all the working parts before this area.
-                file_read=urllib.request.urlopen(file)
+                file_read=request.urlopen(file)
                 print('The pdf with urlopen is:\n',file_read)
                 pdf_reader= pdf.PdfFileReader(file_read, "rb")
             
