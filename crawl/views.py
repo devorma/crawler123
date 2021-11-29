@@ -51,9 +51,10 @@ import spacy
 # from StringIO import StringIO
 from spacy.lang.it.stop_words import STOP_WORDS as stopwords #getting the italian stop words
 
+import urllib3
+import shutil
 
-
-MBFACTOR = float(1 << 20) #for converting byted to Megabytes
+# MBFACTOR = float(1 << 20) #for converting byted to Megabytes
 
 
 try:
@@ -126,26 +127,40 @@ def crawl(request):
                 
             file_links=[]
             http=urllib3.PoolManager()   
+
             #now extracting files from the links produced:
             for link in Publisher.objects.values_list('links'):
                 print('The final selected links are:\n',link)
                 file_links.append(link[0])
         
             for file in file_links:
+
                 print('The file link in last loop is:\n',file)
-
+                
                 response = requests.get(file)
-
                 file_parse = urlparse(file)
                 file_name=os.path.basename(file_parse.path)  
+                
                 print('The file name in the last loop is:\n',file_name)  
                 
-                #this part is not working and all the working parts before this area.
+                #file read
                 file_read=http.request('GET',file)
-                print('The pdf with urlopen is:\n',file_read)
+                print('The pdf with url object is:\n',file_read)
+
                 
-                temp=file_read.read()
-                print('The read file is :\n',temp)
+                temp=file_read.data
+
+                print('The temp obj is:\n:',temp)
+
+
+                pdf_reader= pdf.PdfFileReader(temp, "rb")
+                print('The pdf readerr obj is:\n:',pdf_reader)
+                NumPages = pdf_reader.getNumPages()
+                print('The number of pages in the pdf are:\n',NumPages)
+                # print('The read file is :\n',temp)
+                # with open(file_name, 'wb') as out:
+                #     shutil.copyfileobj(file_read, out)
+
 
 
 
