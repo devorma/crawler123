@@ -23,6 +23,8 @@ from bs4 import BeautifulSoup
 import os
 from urllib.parse import urlparse
 
+import urllib3
+
 
 
 #Connection with the Database
@@ -49,7 +51,6 @@ import spacy
 # from StringIO import StringIO
 from spacy.lang.it.stop_words import STOP_WORDS as stopwords #getting the italian stop words
 
-from urllib import request,urlopen
 
 
 MBFACTOR = float(1 << 20) #for converting byted to Megabytes
@@ -123,7 +124,8 @@ def crawl(request):
                         print('Found Duplicate item:\n',row.name)
                         row.delete()
                 
-            file_links=[]   
+            file_links=[]
+            http=urllib3.PoolManager()   
             #now extracting files from the links produced:
             for link in Publisher.objects.values_list('links'):
                 print('The final selected links are:\n',link)
@@ -139,8 +141,21 @@ def crawl(request):
                 print('The file name in the last loop is:\n',file_name)  
                 
                 #this part is not working and all the working parts before this area.
-                file_read=request.urlopen(file)
+                file_read=http.request('GET',file)
                 print('The pdf with urlopen is:\n',file_read)
+                
+                ####
+                r = http.request('GET', file, preload_content=False)
+
+                # with open(file_name, 'wb') as out:
+                #     while True:
+                #         data = r.read(chunk_size)
+                #         if not data:
+                #             break
+                #         out.write(data)
+                print(r.data)
+                r.release_conn()
+                ###
                 pdf_reader= pdf.PdfFileReader(file_read, "rb")
             
                 NumPages = pdf_reader.getNumPages()
