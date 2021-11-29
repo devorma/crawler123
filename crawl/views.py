@@ -144,22 +144,15 @@ def crawl(request):
                 file_read=http.request('GET',file)
                 print('The pdf with urlopen is:\n',file_read)
                 
-                ####
-                r = http.request('GET', file, preload_content=False)
+                temp=file_read.read()
+                print('The read file is :\n',temp)
 
-                # with open(file_name, 'wb') as out:
-                #     while True:
-                #         data = r.read(chunk_size)
-                #         if not data:
-                #             break
-                #         out.write(data)
-                print(r.data)
-                r.release_conn()
-                ###
-                pdf_reader= pdf.PdfFileReader(file_read, "rb")
+
+
+                # pdf_reader= pdf.PdfFileReader(file_read, "rb")
             
-                NumPages = pdf_reader.getNumPages()
-                print('The number of pages in the pdf are:\n',NumPages)
+                # NumPages = pdf_reader.getNumPages()
+                # print('The number of pages in the pdf are:\n',NumPages)
                     
     except Exception as exc:
         pass
