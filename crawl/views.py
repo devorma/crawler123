@@ -114,39 +114,24 @@ def crawl(request):
             for link in Publisher.objects.values_list('links'):
                 print('The final selected links are:\n',link)
                 file_links.append(link[0])
-        
+
+            print('The final links array is:\n',file_links)
+            
             for file in file_links:
 
                 print('The file link in last loop is:\n',file)
                 
                 response = requests.get(file)
+
                 file_parse = urlparse(file)
                 file_name=os.path.basename(file_parse.path)  
                 
                 print('The file name in the last loop is:\n',file_name)  
-                
-                #file read
-                file_read=http.request('GET',file)
-                print('The pdf with url object is:\n',file_read)
 
-                
-                temp=file_read.read()
+                print(f'The read content is\n {response.content}')
+                print(f'The read status code is \n{response.status_code}')
+                print(f'The read response is \n{response.raw.read(20)}')
 
-                print('The status file is:\n',file_read.status)
-                print('The file read json obj is:\n:',file_read.json())
-                print('The temp file is:\n',temp.decode('utf-8'))
-
-                # print('The temp obj is:\n:',temp)
-                # print('The file read json obj is:\n:',file_read.json())
-
-
-                # pdf_reader= pdf.PdfFileReader(file_read, "rb")
-                # print('The pdf readerr obj is:\n:',pdf_reader)
-                # NumPages = pdf_reader.getNumPages()
-                # print('The number of pages in the pdf are:\n',NumPages)
-                # print('The read file is :\n',temp)
-                # with open(file_name, 'wb') as out:
-                #     shutil.copyfileobj(file_read, out)
 
 
 
@@ -157,7 +142,6 @@ def crawl(request):
                 # print('The number of pages in the pdf are:\n',NumPages)
                     
     except Exception as exc:
-        pass
         return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
         #if integrity exception error is passed or value error is thrown
 
