@@ -25,6 +25,8 @@ from urllib.parse import urlparse
 
 import urllib3
 import urllib.request
+import gzip
+import io
 
 
 #Connection with the Database
@@ -109,7 +111,6 @@ def crawl(request):
 
             #now extracting files from the links produced:
             for link in Publisher.objects.values_list('links'):
-                #print('The final selected links are:\n',link)
                 file_links.append(link[0])
 
             print('The final links array is:\n',file_links)
@@ -124,9 +125,22 @@ def crawl(request):
 
                 print('The encoding is:\n',response.encoding)
                 read_file=urllib.request.urlopen(file).read()
-                #print('The rea dfile is:\n',read_file)
-                for line in read_file:
-                    print(line.decode('utf-8'))
+                # create file-like object in memory
+                buf = io.StringIO(read_file.read())
+
+                # create gzip object using file-like object instead of real file on disk
+                f = gzip.GzipFile(fileobj=buf)
+
+                # get data from file
+                html = f.read()
+
+                print(html)
+
+
+
+
+                # for line in read_file:
+                #     print(line.decode('utf-8'))
                 # for line in urllib.request.urlopen(file): #this line is not working
                 #     print(line.decode('utf-8')) #utf-8 or iso8859-1 or whatever the page encoding scheme is
 
@@ -134,8 +148,7 @@ def crawl(request):
                 # print(f'The pdf_reader is:\n{pdf_reader}')
 
                 # NumPages = pdf_reader.getNumPages()
-                # print('The number of pages in the pdf are:\n',NumPages)
-                    
+                # print('The number of pages in the pdf are:\n',NumPages) 
     except Exception as exc:
         return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
         #if integrity exception error is passed or value error is thrown
