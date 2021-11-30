@@ -125,9 +125,9 @@ def crawl(request):
 
                 print('The encoding is:\n',response.encoding)
 
-                read_file=urllib.request.urlopen(file).read()
+                read_file=urllib.request.urlopen(file)
                 # create file-like object in memory
-                buf = io.StringIO(read_file)
+                buf = io.StringIO(read_file.read())
 
                 # create gzip object using file-like object instead of real file on disk
                 f = gzip.GzipFile(fileobj=buf)
