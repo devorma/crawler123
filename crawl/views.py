@@ -126,10 +126,12 @@ def crawl(request):
                 print('The encoding is:\n',response.encoding)
 
                 res = urllib.urlretrieve(file).read()
-                print(f'The read file contents are:\n{res}')
+                contents = open(res[0]).read()
+                print(f'The read file contents are:\n{contents}')
 
-                contents = open(res[0]).read() 
-                print('The content is :\n',contents) 
+                f = open(file_name,'rb')
+                print('The read contents are:\n',f)
+                
 
                 # read_file=urllib.request.urlopen(file)
                 # # create file-like object in memory
@@ -151,6 +153,7 @@ def crawl(request):
 
                 # NumPages = pdf_reader.getNumPages()
                 # print('The number of pages in the pdf are:\n',NumPages) 
+
     except Exception as exc:
         return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
         #if integrity exception error is passed or value error is thrown
