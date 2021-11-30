@@ -24,7 +24,7 @@ import os
 from urllib.parse import urlparse
 
 import urllib3
-
+import urllib.request
 
 
 #Connection with the Database
@@ -89,7 +89,6 @@ def crawl(request):
                 if response.status_code == 200: #checking if the url is responsive and available but removed due to time complexity issues with heroku
                     a = urlparse(u)
                     fl=os.path.basename(a.path) #parsing the filename from the url
-
                     file_size=response.headers.get('content-length', 0)
                     content_type=response.headers.get('Content-Type', 0)
                     last_modified=response.headers.get('Last-Modified', 0)
@@ -130,11 +129,14 @@ def crawl(request):
 
                 print('The encoding is:\n',response.encoding)
 
-                pdf_reader= pdf.PdfFileReader(response.content, "rb")
-                print(f'The pdf_reader is:\n{pdf_reader}')
+                for line in urllib.request.urlopen(file):
+                    print(line.decode('utf-8')) #utf-8 or iso8859-1 or whatever the page encoding scheme is
 
-                NumPages = pdf_reader.getNumPages()
-                print('The number of pages in the pdf are:\n',NumPages)
+                # pdf_reader= pdf.PdfFileReader(response.content, "rb")
+                # print(f'The pdf_reader is:\n{pdf_reader}')
+
+                # NumPages = pdf_reader.getNumPages()
+                # print('The number of pages in the pdf are:\n',NumPages)
                     
     except Exception as exc:
         return render(request, 'result.html', {'list':all_links}) #redirecting to the results template page
