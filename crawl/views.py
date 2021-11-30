@@ -27,7 +27,7 @@ import urllib3
 import urllib.request
 import gzip
 import io
-
+import urllib
 
 #Connection with the Database
 # import mysql.connector
@@ -125,15 +125,20 @@ def crawl(request):
 
                 print('The encoding is:\n',response.encoding)
 
-                read_file=urllib.request.urlopen(file)
-                # create file-like object in memory
-                buf = io.StringIO(read_file.read())
+                res = urllib.urlretrieve(file)
+                
+                contents = open(res[0]).read() 
+                print('The content is :\n',contents) 
 
-                # create gzip object using file-like object instead of real file on disk
-                f = gzip.GzipFile(fileobj=buf)
-                # get data from file
-                html = f.read()
-                print(html)
+                # read_file=urllib.request.urlopen(file)
+                # # create file-like object in memory
+                # buf = io.StringIO(read_file.read())
+
+                # # create gzip object using file-like object instead of real file on disk
+                # f = gzip.GzipFile(fileobj=buf)
+                # # get data from file
+                # html = f.read()
+                # print(html)
 
                 # for line in read_file:
                 #     print(line.decode('utf-8'))
