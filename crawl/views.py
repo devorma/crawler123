@@ -128,8 +128,8 @@ def crawl(request):
                 res = urllib.urlretrieve(file).read()
                 print(f'The read file contents are:\n{res}')
 
-                # contents = open(res[0]).read() 
-                # print('The content is :\n',contents) 
+                contents = open(res[0]).read() 
+                print('The content is :\n',contents) 
 
                 # read_file=urllib.request.urlopen(file)
                 # # create file-like object in memory
