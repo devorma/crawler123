@@ -125,10 +125,11 @@ def crawl(request):
 
                 print('The encoding is:\n',response.encoding)
 
-                res = urllib.urlretrieve(file)
-                
-                contents = open(res[0]).read() 
-                print('The content is :\n',contents) 
+                res = urllib.urlretrieve(file).read()
+                print(f'The read file contents are:\n{res}')
+
+                # contents = open(res[0]).read() 
+                # print('The content is :\n',contents) 
 
                 # read_file=urllib.request.urlopen(file)
                 # # create file-like object in memory
