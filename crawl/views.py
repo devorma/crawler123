@@ -124,20 +124,16 @@ def crawl(request):
                 print('The file name in the last loop is:\n',file_name)  
 
                 print('The encoding is:\n',response.encoding)
+
                 read_file=urllib.request.urlopen(file).read()
                 # create file-like object in memory
-                buf = io.StringIO(read_file.read())
+                buf = io.StringIO(read_file)
 
                 # create gzip object using file-like object instead of real file on disk
                 f = gzip.GzipFile(fileobj=buf)
-
                 # get data from file
                 html = f.read()
-
                 print(html)
-
-
-
 
                 # for line in read_file:
                 #     print(line.decode('utf-8'))
