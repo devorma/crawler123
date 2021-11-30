@@ -86,40 +86,35 @@ def crawl(request):
             for u in all_links:
                 print('The links are:\n',u)
                 response = requests.get(u) #fetching each the url from the list
-                if response.status_code == 200: #checking if the url is responsive and available but removed due to time complexity issues with heroku
-                    a = urlparse(u)
-                    fl=os.path.basename(a.path) #parsing the filename from the url
-                    file_size=response.headers.get('content-length', 0)
-                    content_type=response.headers.get('Content-Type', 0)
-                    last_modified=response.headers.get('Last-Modified', 0)
-                    expiry_date=response.headers.get('Expires', 0)
-                    cache_control=response.headers.get('Cache', 0)
-                    server=response.headers.get('Server', 0)
+                #if response.status_code == 200: #checking if the url is responsive and available but removed due to time complexity issues with heroku
+                a = urlparse(u)
+                fl=os.path.basename(a.path) #parsing the filename from the url
+                file_size=response.headers.get('content-length', 0)
+                content_type=response.headers.get('Content-Type', 0)
+                last_modified=response.headers.get('Last-Modified', 0)
+                expiry_date=response.headers.get('Expires', 0)
+                cache_control=response.headers.get('Cache', 0)
+                server=response.headers.get('Server', 0)
 
-                    pub_instance = Publisher.objects.create(name=fl,links=u,file_size=file_size,content_type=content_type,last_modified_y=last_modified,expiry_date_y=expiry_date,cache_control_y=cache_control,server_y=server) #creating the entry in the database
-                    pub_instance.save() #saving the info for each url to database
+                pub_instance = Publisher.objects.create(name=fl,links=u,file_size=file_size,content_type=content_type,last_modified_y=last_modified,expiry_date_y=expiry_date,cache_control_y=cache_control,server_y=server) #creating the entry in the database
+                pub_instance.save() #saving the info for each url to database
 
-                    for row in Publisher.objects.all().reverse(): #removing all the duplicate items from the database
-                        if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
-                            print('Found Duplicate item:\n',row.name)
-                            row.delete()
-                else:
-                    pass
+                for row in Publisher.objects.all().reverse(): #removing all the duplicate items from the database
+                    if Publisher.objects.filter(name=row.name).count() > 1: #using name as a filter
+                        print('Found Duplicate item:\n',row.name)
+                        row.delete()
+
                 
-            file_links=[]
-            http=urllib3.PoolManager()   
+            file_links=[]  
 
             #now extracting files from the links produced:
             for link in Publisher.objects.values_list('links'):
-                print('The final selected links are:\n',link)
+                #print('The final selected links are:\n',link)
                 file_links.append(link[0])
 
             print('The final links array is:\n',file_links)
             
             for file in file_links:
-
-                print('The file link in last loop is:\n',file)
-                
                 response = requests.get(file)
 
                 file_parse = urlparse(file)
@@ -129,7 +124,9 @@ def crawl(request):
 
                 print('The encoding is:\n',response.encoding)
                 read_file=urllib.request.urlopen(file).read()
-                print('The rea dfile is:\n',read_file)
+                #print('The rea dfile is:\n',read_file)
+                for line in read_file:
+                    print(line.decode('utf-8'))
                 # for line in urllib.request.urlopen(file): #this line is not working
                 #     print(line.decode('utf-8')) #utf-8 or iso8859-1 or whatever the page encoding scheme is
 
