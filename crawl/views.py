@@ -128,9 +128,10 @@ def crawl(request):
                 print('The file name in the last loop is:\n',file_name)  
 
                 print('The encoding is:\n',response.encoding)
-
-                for line in urllib.request.urlopen(file):
-                    print(line.decode('utf-8')) #utf-8 or iso8859-1 or whatever the page encoding scheme is
+                read_file=urllib.request.urlopen(file).read()
+                print('The rea dfile is:\n',read_file)
+                # for line in urllib.request.urlopen(file): #this line is not working
+                #     print(line.decode('utf-8')) #utf-8 or iso8859-1 or whatever the page encoding scheme is
 
                 # pdf_reader= pdf.PdfFileReader(response.content, "rb")
                 # print(f'The pdf_reader is:\n{pdf_reader}')
